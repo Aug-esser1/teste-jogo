@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Posições</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .header {
+            color: #54b936;
+            padding: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            border: 5px solid #FFEB3B;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(40px);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 500px;
+            margin-bottom: 20px;
+        }
+
+        .position-image {
+            width: 250px;
+            height: 250px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .option-button {
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        .option-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .option-button:active {
+            transform: scale(0.95);
+        }
+
+        #feedback {
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #congratulations {
+            display: none;
+            font-size: 36px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-top: 20px;
+        }
+                
+        .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 12px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        background-color: #51a737;
+        color: white;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.2s;
+        text-decoration: none;
+        font-weight: bold;
+        z-index: 1000; /* Garante que fique sobre outros elementos */
+    }
+
+    .back-button:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+    }
+
+    .back-button:active {
+        transform: scale(0.95);
+    }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 20px;">
+        <a href="../HUB/index.html" class="back-button">⬅ Voltar ao HUB</a>
+    </div>
+    <div class="header">QUAL É A POSIÇÃO?</div>
+    <div class="game-container">
+        <img id="position-image" class="position-image" src="" alt="Posição">
+        <div class="options"></div>
+        <p id="feedback"></p>
+        <p id="congratulations">Parabéns! Você acertou todas!</p>
+    </div>
+    <script>
+        const positions = [
+            { name: 'Em cima', image: 'images/em_cima.png' },
+            { name: 'Embaixo', image: 'images/embaixo.png' },
+            { name: 'Ao lado', image: 'images/ao_lado.png' },
+            { name: 'Dentro', image: 'images/dentro.png' }
+        ];
+    
+        let currentPosition = 0;
+        let correctAnswers = 0;
+    
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+    
+        function loadPosition() {
+            const p = positions[currentPosition];
+            document.getElementById('position-image').src = p.image;
+            
+            let options = [...positions];
+            options = [p, ...getRandomOptions(options.filter(option => option.name !== p.name))];
+            shuffle(options);
+    
+            const optionElements = document.querySelector('.options');
+            optionElements.innerHTML = '';
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.name;
+                button.classList.add('option-button');
+                button.onclick = () => checkAnswer(option);
+                optionElements.appendChild(button);
+            });
+        }
+    
+        function getRandomOptions(options) {
+            shuffle(options);
+            return options.slice(0, 3);
+        }
+    
+        function checkAnswer(selectedPosition) {
+            const p = positions[currentPosition];
+            if (selectedPosition.name === p.name) {
+                correctAnswers++;
+                document.getElementById('feedback').textContent = 'Correto!';
+                document.getElementById('feedback').style.color = '#FFEB3B';
+            } else {
+                document.getElementById('feedback').textContent = 'Errado!';
+                document.getElementById('feedback').style.color = 'red';
+            }
+    
+            if (correctAnswers === positions.length) {  // Certifica-se de que todas foram acertadas
+                showCongratulations();
+            } else {
+                setTimeout(() => {
+                    currentPosition = (currentPosition + 1) % positions.length;
+                    document.getElementById('feedback').textContent = '';
+                    loadPosition();
+                }, 2000);
+            }
+        }
+    
+        function showCongratulations() {
+            document.getElementById('congratulations').style.display = 'block';
+        }
+    
+        loadPosition();
+    </script>
+</body>
+</html>
