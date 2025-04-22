@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUB de Jogos Infantis</title>
+    <style>
+        /* Geral */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+
+        .hub-container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .header {
+            font-size: 36px;
+            font-weight: bold;
+            color: #FF5733;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            justify-items: center;
+            padding: 10px;
+        }
+
+        .game-option {
+            background: linear-gradient(135deg, #FFDD57, #FF6F61);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            width: 180px;
+            height: 220px;
+            text-decoration: none;
+        }
+
+        .game-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-option a {
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-image {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .game-link {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                font-size: 28px;
+            }
+
+            .game-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .game-link {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                font-size: 24px;
+            }
+
+            .game-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .game-link {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <div class="header">Escolha seu Jogo</div>
+        
+        <div class="games-grid">
+            <a href="HUB\jogo_cores\index.html" class="game-option">
+                <img src="images/emocoes.png" alt="Jogo das Emoções" class="game-image">
+                <div class="game-link">🎭 Jogo das Emoções</div>
+            </a>
+            <a href="/jogo_cores/jogo-cores.html" class="game-option">
+                <img src="images/cores.png" alt="Jogo das Cores" class="game-image">
+                <div class="game-link">🎨 Jogo das Cores</div>
+            </a>
+            <a href="/jogo_posicao/jogo-posicoes.html" class="game-option">
+                <img src="images/posicoes.png" alt="Jogo das Posições" class="game-image">
+                <div class="game-link">📍 Jogo das Posições</div>
+            </a>
+            <a href="/jogo_numeros/jogo-numeros.html" class="game-option">
+                <img src="images/numeros.png" alt="Jogo de Contagem" class="game-image">
+                <div class="game-link">🔢 Jogo de Contagem</div>
+            </a>
+            <a href="/Jogo_sons_instrumentos/jogo-instrumentos.html" class="game-option">
+                <img src="images/instrumentos.png" alt="Jogo dos Instrumentos" class="game-image">
+                <div class="game-link">🔷 Jogo dos Instrumentos</div>
+            </a>
+            <a href="/Jogo_sons_animais/jogo-animais.html" class="game-option">
+                <img src="images/animais.png" alt="Jogo dos Animais" class="game-image">
+                <div class="game-link">🔊 Jogo dos Animais</div>
+            </a>
+            <a href="/jogo_fruta/jogo-frutas.html" class="game-option">
+                <img src="images/fruta.png" alt="Jogo da Fruta" class="game-image">
+                <div class="game-link">✨ Jogo da Fruta</div>
+            </a>
+            <a href="/jogo_rotinas/jogo-rotinas.html" class="game-option">
+                <img src="images/rotinas.png" alt="Jogo das Rotinas " class="game-image">
+                <div class="game-link">⏰ Jogo das Rotinas</div>
+            </a>
+            <a href="/jogo_texturas/jogo-texturas.html" class="game-option">
+                <img src="images/Texturas.png" alt="Jogo das Texturas" class="game-image">
+                <div class="game-link">😵‍💫 Jogo das Texturas</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
