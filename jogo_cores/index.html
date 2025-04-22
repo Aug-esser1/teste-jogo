@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Identificação de Cores</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('images/background.png'); /* Imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .header {
+            color: #4CAF50;
+            padding: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            border: 5px solid #FFEB3B;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 500px;
+        }
+
+        .color-image {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .audio-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #1ec062;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 20px;
+    display: block; /* Faz o botão se comportar como um bloco */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+        .audio-button:hover {
+            background-color: #e68900;
+            transform: scale(1.05);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .option-button {
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        .option-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .option-button:active {
+            transform: scale(0.95);
+        }
+
+        #feedback {
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 12px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        background-color: #51a737;
+        color: white;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.2s;
+        text-decoration: none;
+        font-weight: bold;
+        z-index: 1000; /* Garante que fique sobre outros elementos */
+    }
+
+    .back-button:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+    }
+
+    .back-button:active {
+        transform: scale(0.95);
+    }
+        #congratulations {
+            display: none;
+            font-size: 36px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-top: 20px;
+            
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 20px;">
+        <a href="../HUB/index.html" class="back-button">⬅ Voltar ao HUB</a>
+    </div>
+    
+    <div class="header">QUAL É A COR?</div>
+    <div class="game-container">
+        <img id="color-image" class="color-image" src="" alt="Cor">
+        <button id="audio-button" class="audio-button">🔊 Clique para ouvir o nome da cor</button>
+        <div class="options"></div>
+        <p id="feedback"></p>
+        <p id="congratulations">Parabéns! Você acertou todas!</p>
+    </div>
+
+    <script>
+        const colors = [
+            { name: 'Vermelho', image: 'images/red.png', audio: 'sounds/red.mp3' },
+            { name: 'Azul', image: 'images/blue.png', audio: 'sounds/blue.mp3' },
+            { name: 'Amarelo', image: 'images/yellow.png', audio: 'sounds/yellow.mp3' },
+            { name: 'Verde', image: 'images/green.png', audio: 'sounds/green.mp3' },
+            { name: 'Laranja', image: 'images/orange.png', audio: 'sounds/orange.mp3' },
+            { name: 'Rosa', image: 'images/pink.png', audio: 'sounds/pink.mp3' }
+        ];
+
+        let currentColor = 0;
+        let correctAnswers = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadColor() {
+            const c = colors[currentColor];
+            document.getElementById('color-image').src = c.image;
+
+            let options = [...colors];
+            options = [c, ...getRandomOptions(options.filter(option => option.name !== c.name))];
+            shuffle(options);
+
+            const optionElements = document.querySelector('.options');
+            optionElements.innerHTML = '';
+
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.name;
+                button.classList.add('option-button');
+                button.onclick = () => checkAnswer(option);
+                optionElements.appendChild(button);
+            });
+
+            const audioButton = document.getElementById('audio-button');
+            audioButton.onclick = () => playAudio(c.audio);
+        }
+
+        function getRandomOptions(options) {
+            shuffle(options);
+            return options.slice(0, 3);
+        }
+
+        function checkAnswer(selectedColor) {
+            const c = colors[currentColor];
+            if (selectedColor.name === c.name) {
+                correctAnswers++;
+                document.getElementById('feedback').textContent = 'Correto!';
+                document.getElementById('feedback').style.color = '#FFEB3B';
+            } else {
+                document.getElementById('feedback').textContent = 'Errado!';
+                document.getElementById('feedback').style.color = 'red';
+            }
+
+            if (correctAnswers === colors.length) {
+                showCongratulations();
+            } else {
+                setTimeout(() => {
+                    currentColor = (currentColor + 1) % colors.length;
+                    document.getElementById('feedback').textContent = '';
+                    loadColor();
+                }, 2000);
+            }
+        }
+
+        function playAudio(audioFile) {
+            const audio = new Audio(audioFile);
+            audio.play();
+        }
+
+        function showCongratulations() {
+            document.getElementById('congratulations').style.display = 'block';
+        }
+
+        loadColor();
+    </script>
+</body>
+</html>
